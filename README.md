@@ -22,7 +22,6 @@ Whilst this is an ideal solution for a 9x9 field, one would be advised to switch
 
 ### Data-structure that Represents the Leaderboard
 
-Now for this guy it does make sense to use a struct. And the request queue for the thread pool is a ... Linked List ... I feel disgusted just saying those two words.
 ```
 typedef struct {
   uint8_t num_entries; //MAX = 21 = MAXLRDBRDENTRIES
