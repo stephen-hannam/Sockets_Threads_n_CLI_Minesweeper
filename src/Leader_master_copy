@@ -1,0 +1,110 @@
+Maolin, 7, 2, 2
+Mike, 19, 2, 2
+Anthony, 24, 2, 2
+Anna, 26, 2, 3
+Richie, 28, 2, 2
+Jason, 29, 3, 5
+Paul 29, 2, 5
+Mike, 29, 2, 2
+Timothy, 30, 2, 3
+Jason, 32, 3, 5
+Paul, 33, 2, 5
+Justin, 33, 2, 4
+Anna, 34, 2, 3
+Maolin, 36, 2, 2
+Justin, 38, 2, 4
+Peter, 40, 2, 2
+Anthony, 51, 2, 2
+Richie, 60, 2, 2
+Timothy, 104, 2, 3
+Peter, 152, 2, 2
+Jason, 1421, 3, 5
+==========================================
+lbrd->player_names[0] = "Maolin";
+lbrd->player_names[1] = "Jason";
+lbrd->player_names[2] = "Mike";
+lbrd->player_names[3] = "Peter";
+lbrd->player_names[4] = "Justin";
+lbrd->player_names[5] = "Anna";
+lbrd->player_names[6] = "Timothy";
+lbrd->player_names[7] = "Anthony";
+lbrd->player_names[8] = "Paul";
+lbrd->player_names[9] = "Richie";
+lbrd->num_entries = MAX_LRDBRD_ENTRIES;
+lbrd->player_stats[0] = 2;      lbrd->player_stats[1] = 2; 
+lbrd->player_stats[2] = 3;      lbrd->player_stats[3] = 5; 
+lbrd->player_stats[4] = 2;      lbrd->player_stats[5] = 2; 
+lbrd->player_stats[6] = 2;      lbrd->player_stats[7] = 2; 
+lbrd->player_stats[8] = 2;      lbrd->player_stats[9] = 4; 
+lbrd->player_stats[10] = 2;      lbrd->player_stats[11] = 3; 
+lbrd->player_stats[12] = 2;      lbrd->player_stats[13] = 3; 
+lbrd->player_stats[14] = 2;      lbrd->player_stats[15] = 2; 
+lbrd->player_stats[16] = 2;      lbrd->player_stats[17] = 5; 
+lbrd->player_stats[18] = 2;      lbrd->player_stats[19] = 2; 
+
+lbrd->best_times[0] = 7;
+lbrd->best_times[1] = 19;
+lbrd->best_times[2] = 24;
+lbrd->best_times[3] = 26;
+lbrd->best_times[4] = 28;
+lbrd->best_times[5] = 29;
+lbrd->best_times[6] = 29;
+lbrd->best_times[7] = 29;
+lbrd->best_times[8] = 30;
+lbrd->best_times[9] = 32;
+lbrd->best_times[10] = 33;
+lbrd->best_times[11] = 33;
+lbrd->best_times[12] = 34;
+lbrd->best_times[13] = 36;
+lbrd->best_times[14] = 38;
+lbrd->best_times[15] = 40;
+lbrd->best_times[16] = 51;
+lbrd->best_times[17] = 60;
+lbrd->best_times[18] = 104;
+lbrd->best_times[19] = 152;
+lbrd->best_times[20] = 1421;
+
+lbrd->best_ids[0] = 0;
+lbrd->best_ids[1] = 2;
+lbrd->best_ids[2] = 7;
+lbrd->best_ids[3] = 5;
+lbrd->best_ids[4] = 9;
+lbrd->best_ids[5] = 1;
+lbrd->best_ids[6] = 8;
+lbrd->best_ids[7] = 2;
+lbrd->best_ids[8] = 6;
+lbrd->best_ids[9] = 1;
+lbrd->best_ids[10] = 8;
+lbrd->best_ids[11] = 4;
+lbrd->best_ids[12] = 5;
+lbrd->best_ids[13] = 0;
+lbrd->best_ids[14] = 4;
+lbrd->best_ids[15] = 3;
+lbrd->best_ids[16] = 7;
+lbrd->best_ids[17] = 9;
+lbrd->best_ids[18] = 6;
+lbrd->best_ids[19] = 3;
+lbrd->best_ids[20] = 1;
+
+
+Maolin, 7, 2, 2
+Mike, 19, 2, 2
+Anthony, 24, 2, 2
+Anna, 26, 2, 3
+Richie, 28, 2, 2
+Jason, 29, 3, 5
+Paul 29, 2, 5
+Mike, 29, 2, 2
+Timothy, 30, 2, 3
+Jason, 32, 3, 5
+Paul, 33, 2, 5
+Justin, 33, 2, 4
+Anna, 34, 2, 3
+Maolin, 36, 2, 2
+Justin, 38, 2, 4
+Peter, 40, 2, 2
+Anthony, 51, 2, 2
+Richie, 60, 2, 2
+Timothy, 104, 2, 3
+Peter, 152, 2, 2
+Jason, 1421, 3, 5

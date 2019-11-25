@@ -1,0 +1,36 @@
+### Description
+
+Client-Server style CLI Minesweeper Game written in C for Linux. Featuring:
+
+1. Unix Sockets
+2. Signal handling
+3. Pthreads in a thread pool configuration and protected critical sections
+4. Highly optimized minefield using connected-component-labelling (blob detection); 1 byte per tile
+5. Client authentication (of the pointless and weak variety) and a leader-board
+
+### Making
+
+There is a Makefile. It’s ugly but it works. Options are: make, make server, make client, make clean, make clean server, make clean client.
+
+### Data-structure that Represents the Playing Field
+
+An 81 byte array (probably contiguous, I didn’t want to use kmalloc). Tiles with numbers 1-8 under them, are just valued 1-8. Mines are indicated using INT8 MIN (-128). Tiles with a zero directly underneath are represented with a number 9 through INT8 MAX, and all contiguous zero tiles share the same number. Tiles adjacent to a contiguous grouping of zero tiles with some number 1-8 under them are represented using the numbers -9 through (INT8 MIN + 1), where the number in the tens position indicates which contiguous blob of zeros the tile is adjacent to, and the value in the ones position holds the value of the number under the tile that must be revealed.
+
+This is **connected-component labelling**, sometimes known as blob detection. It does involve a more computationally heavy setup procedure, however, once the field is setup per game turn computation is reduced and the data becomes a trivial speck in a cache line. **Stay on the Cache!**
+
+Whilst this is an ideal solution for a 9x9 field, one would be advised to switch to using int16 t values in the array for anything larger than 9x9, as more than 12 contiguous regions of zero may start to become possible.
+
+### Data-structure that Represents the Leaderboard
+
+Now for this guy it does make sense to use a struct. And the request queue for the thread pool is a ... Linked List ... I feel disgusted just saying those two words.
+```
+typedef struct {
+uint8_t num_entries; //MAX = 21 = MAXLRDBRDENTRIES
+uint8_t ∗ best_ids ;
+time_t ∗ best_times; // IT WAS THE BEST OF TIMES, IT WAS THE BLURST OF TIMES! stupid monkey
+uint16_t ∗ player_stats; // {num_won, num_played, ...} @ idx1 = 2∗id, idx2 = 2∗id+1
+unsigned char ∗∗ playernames; // len = MAXPLAYERS ∗ MAXAUTHFIELDLEN, idx = id
+bool vld; // for error checking and backups
+} leaderbrd ;
+```
+So you see now, there’s this struct thing, and people who don’t prefer to write in assembly seem to really like them. I’ve no idea why. C is weakly typed anyway. You’ve got bit-wise operators right? Use them.
