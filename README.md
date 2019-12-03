@@ -72,6 +72,7 @@ The final process of evaluated moves and revealing blobs on the minefield is sim
 Expanding zero-blobs is done by:
 
 ```
+// id is the zero-blob id, the value of any tile btw -1 and MIN+1
 void revealBlob(int8_t ** map, unsigned char ** part_map, int8_t id){
     for(uint8_t i = 0; i < NUM_TILES_X; i++){
         for(uint8_t j = 0; j < NUM_TILES_Y; j++){
