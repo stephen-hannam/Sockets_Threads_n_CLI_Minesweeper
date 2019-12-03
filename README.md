@@ -49,3 +49,5 @@ typedef struct {
 So you see now, there’s this struct thing, and people who don’t prefer to write in assembly seem to really like them. I’ve no idea why. C is weakly typed anyway. You’ve got bit-wise operators right? Use them.
 
 ### Unit tests
+
+![](https://i.imgur.com/i4wDj93.png)
