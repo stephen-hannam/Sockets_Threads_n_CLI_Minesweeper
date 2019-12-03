@@ -28,7 +28,7 @@ To run the server-client connection across different machines, use the correct I
 
 ### Data-structure that Represents the Playing Field
 
-An 81 byte array (probably contiguous, I didn’t want to use kmalloc). Tiles with numbers 1-8 under them, are just valued 1-8. Mines are indicated using INT8 MIN (-128). Tiles with a zero directly underneath are represented with a number 9 through INT8 MAX, and all contiguous zero tiles share the same number. Tiles adjacent to a contiguous grouping of zero tiles with some number 1-8 under them are represented using the numbers -9 through (INT8 MIN + 1), where the number in the tens position indicates which contiguous blob of zeros the tile is adjacent to, and the value in the ones position holds the value of the number under the tile that must be revealed.
+An 81 byte array. Tiles with numbers 1-8 under them, are just valued 1-8. Mines are indicated using INT8 MIN (-128). Tiles with a zero directly underneath are represented with a number 9 through INT8 MAX, and all contiguous zero tiles share the same number. Tiles adjacent to a contiguous grouping of zero tiles with some number 1-8 under them are represented using the numbers -9 through (INT8 MIN + 1), where the number in the tens position indicates which contiguous blob of zeros the tile is adjacent to, and the value in the ones position holds the value of the number under the tile that must be revealed.
 
 This is **connected-component labelling**, sometimes known as blob detection. It does involve a more computationally heavy setup procedure, however, once the field is setup per game turn computation is reduced and the data becomes a trivial speck in a cache line. **Stay on the Cache!**
 
