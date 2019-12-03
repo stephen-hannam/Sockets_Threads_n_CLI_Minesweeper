@@ -8,9 +8,20 @@ Client-Server style CLI Minesweeper Game written in C for Linux. Featuring:
 4. Highly optimized minefield using connected-component-labelling (blob detection); 1 byte per tile
 5. Client authentication (of the pointless and weak variety) and a leader-board
 
-### Making
+### Getting Started
 
-There is a Makefile. It’s ugly but it works. Options are: make, make server, make client, make clean, make clean server, make clean client.
+`$ cd src`
+`$ cp ../Makefile .`
+`$ make`
+`$ ./server`
+
+Open a new terminal, navigate to the same folder
+
+`$ ./client 127.0.0.1 33333`
+
+Pick a name and password from the `Authentication.txt` file for login credentials.
+
+To run the server-client connection across different machines, use the correct IP address instead of `127.0.0.1` and make sure port forwarding is setup correctly on `33333`
 
 ### Data-structure that Represents the Playing Field
 
@@ -33,3 +44,5 @@ typedef struct {
 } leaderbrd ;
 ```
 So you see now, there’s this struct thing, and people who don’t prefer to write in assembly seem to really like them. I’ve no idea why. C is weakly typed anyway. You’ve got bit-wise operators right? Use them.
+
+### Unit tests
