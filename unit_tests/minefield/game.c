@@ -7,30 +7,6 @@
  *  -1 to -INT8_MAX: ids for numbered tiles that fringe a contiguous region of zero tiles
  * */
 
-void test_displayMap(int8_t ** map){
-    int rem = 0;
-
-    printf("\n== Remaining mines: %d == \n", rem);
-    printf("      ");
-    for(uint8_t i = 0; i < NUM_TILES_X; i++) printf("%d   ", i);
-    printf("\n");
-    for(uint8_t i = 0; i < NUM_TILES_X*2 + 3; i++) printf("---");
-    printf("\n");
-    for(uint8_t i = 0; i < NUM_TILES_Y; i++){ printf("%c | ",65+i); // ascii decimal offset 65
-        for(uint8_t j = 0; j < NUM_TILES_Y; j++){
-            if(map[j][i] == MINE) printf("%3c ",'*');
-            else if(map[j][i] == FLAG) printf("+    ");
-            else if(map[j][i] > FLAG && map[j][i] < 9) printf("%3d ", map[j][i]);
-//            else if(map[j][i] < FLAG) printf("%d ", (-1*(map[j][i])) % 10);
-            else if(map[j][i] < FLAG) printf("%3d ", map[j][i]);
-            else if(map[j][i] > 8) printf("%3d ", map[j][i]);
-            else printf("     ");
-        }
-        printf("\n");
-    }
-    printf("\n");
-}
-
 int main(int argc, char ** argv){
 
     struct drand48_data * randBuffer;
@@ -41,14 +17,23 @@ int main(int argc, char ** argv){
     /*
      * Allocate memory for the full map of data needed for a single game
      * */
-    int8_t ** map;
-    if((map = (int8_t**)malloc(NUM_TILES_X * sizeof(*map)))){
+    int8_t ** map_raw;
+    if((map_raw = (int8_t**)malloc(NUM_TILES_X * sizeof(*map_raw)))){
         for(uint8_t i = 0; i < NUM_TILES_X; i++){
-            if((map[i] = (int8_t*)malloc(NUM_TILES_Y * sizeof(**map)))){} //TODO
-            else printf("\nfailed to allocate map\n"); //TODO
+            if((map_raw[i] = (int8_t*)malloc(NUM_TILES_Y * sizeof(**map_raw)))){}
+            else printf("\nfailed to allocate map_raw\n");
         }
     }
-    else printf("\nfailed to allocate map\n");
+    else printf("\nfailed to allocate map_raw\n");
+
+    unsigned char ** map_parsed;
+    if((map_parsed = (unsigned char**)malloc(NUM_TILES_X * sizeof(*map_parsed)))){
+        for(uint8_t i = 0; i < NUM_TILES_X; i++){
+            if((map_parsed[i] = (unsigned char*)malloc(NUM_TILES_Y * sizeof(**map_parsed)))){}
+            else printf("\nfailed to allocate map_parsed\n");
+        }
+    }
+    else printf("\nfailed to allocate map_parsed\n");
     // player: single contiguous array holding details of players: name, # won, times of each game (also serves as # played)
     // fields {16 bytes for name, 2 bytes for # won (MAX 65535), [1 byte times, 0x00, 2 byte times]} <- 0x00 separator
     // provide 2048 Bytes -> can store ~ 2048 - 18 game times
@@ -58,14 +43,120 @@ int main(int argc, char ** argv){
 
     srand(RAND_NUM_SEED);
 
-    initMap(map, randBuffer);
+    initMap(map_raw, randBuffer);
 
-    test_displayMap(map);
+    for (uint8_t i = 0; i < NUM_TILES_X; i++){
+        for (uint8_t j = 0; j < NUM_TILES_Y; j++){
+            updateMap(map_raw,map_parsed,i,j,false);
+        }
+    }
+
+    test_displayMap(map_raw, map_parsed);
 
     /* free dynamically allocated memory */
-    free(map);
+    free(map_raw);
     //free(player);
     return 0;
+}
+
+void test_displayMap(int8_t ** map_raw, unsigned char ** map_parsed){
+
+    printf("\nRaw values used by connect-component labelling \nto define blobs and features\n\n");
+    printf("      ");
+    for(uint8_t i = 0; i < NUM_TILES_X; i++) printf("%d   ", i);
+    printf("   Mine = * = %d", MINE);
+    printf("\n");
+    for(uint8_t i = 0; i < NUM_TILES_X*2 + 3; i++) printf("---");
+    printf("\n");
+    for(uint8_t i = 0; i < NUM_TILES_Y; i++){ printf("%c | ",ASC_UPP+i); // ascii decimal offset 65
+        for(uint8_t j = 0; j < NUM_TILES_Y; j++){
+            if(map_raw[j][i] == MINE) printf("%3c ",'*');
+            else if(map_raw[j][i] == FLAG) printf("+    ");
+            else if(map_raw[j][i] > FLAG && map_raw[j][i] < LBL_OFFSET) printf("%3d ", map_raw[j][i]);
+//            else if(map_raw[j][i] < FLAG) printf("%d ", (-1*(map_raw[j][i])) % 10);
+            else if(map_raw[j][i] < FLAG) printf("%3d ", map_raw[j][i]);
+            else if(map_raw[j][i] > LBL_OFFSET - 1) printf("%3d ", map_raw[j][i]);
+            else printf("     ");
+        }
+        printf("\n");
+    }
+    printf("\n");
+    printf("\n");
+    printf("Parsed values after blobs and features are resolved\n\n");
+    printf("      ");
+    for(uint8_t i = 0; i < NUM_TILES_X; i++) printf("%d   ", i);
+    printf("\n");
+    for(uint8_t i = 0; i < NUM_TILES_X*2 + 3; i++) printf("---");
+    printf("\n");
+    for(uint8_t i = 0; i < NUM_TILES_Y; i++){ printf("%c | ",ASC_UPP+i); // ascii decimal offset 65
+        for(uint8_t j = 0; j < NUM_TILES_Y; j++){
+            if(map_parsed[j][i] == MINE) printf("%3c ",'*');
+            else if(map_parsed[j][i] == FLAG) printf("+    ");
+            else if(map_parsed[j][i] > FLAG && map_parsed[j][i] < LBL_OFFSET) printf("%3c ", map_parsed[j][i]);
+//            else if(map_parsed[j][i] < FLAG) printf("%d ", (-1*(map_parsed[j][i])) % 10);
+            else if(map_parsed[j][i] < FLAG) printf("%3c ", map_parsed[j][i]);
+            else if(map_parsed[j][i] > LBL_OFFSET - 1) printf("%3c ", map_parsed[j][i]);
+            else printf("     ");
+        }
+        printf("\n");
+    }
+    printf("\n");
+
+}
+
+void revealBlob(int8_t ** map, unsigned char ** part_map, int8_t id){
+    for(uint8_t i = 0; i < NUM_TILES_X; i++){
+        for(uint8_t j = 0; j < NUM_TILES_Y; j++){
+            if(map[j][i] == id) part_map[j][i] = '0';
+            else if(map[j][i] < 0 && map[j][i] != MINE){
+                if((-1*(map[j][i]))/10 == (id - LBL_OFFSET))
+                    part_map[j][i] = ((-1*(map[j][i])) % 10) + ASC_NUM;
+            }
+        }
+    }
+}
+
+/*
+ * retcodes (place_flag) :  0: no mine   1: eliminated a mine
+ * retcodes (!place_flag): -1: dead      0: reveal blob,        1+: tile number
+ *
+ * Precondition: invalid player moves have already been handlded by some other routine before calling this one
+ *               invalid player moves includes places a flag on a non-mined tile, or trying to reveal an already revealed tile
+ * Postcondition: partial map to be sent to client to display in console will be current, death of player signalled
+ *                if need be, or reduction in remaining mines signalled if need be
+ * */
+int8_t updateMap(int8_t ** map, unsigned char ** part_map, \
+                 uint8_t x, uint8_t y, bool place_flag){
+
+    if(place_flag){
+        if(map[y][x] == MINE) return 1; // success
+        return INVLD; // invalid attempt to place flag on non-mine tile
+    }
+
+    if(!place_flag && map[y][x] == MINE){
+        // populate part_map
+        for(uint8_t i = 0; i < NUM_TILES_X; i++){
+            for(uint8_t j = 0; j < NUM_TILES_Y; j++){
+                if(map[j][i] == MINE || map[j][i] == FLAG)
+                    part_map[j][i] = '*';
+                //else part_map[j][i] = '_'; // erase or don't erase other tiles ... ?
+            }
+        }
+        return DEAD; // death
+    }
+
+    if(map[y][x] < LBL_OFFSET && map[y][x] > 0){
+        part_map[y][x] = map[y][x] + ASC_NUM; // ASCII offset
+        return part_map[y][x];
+    }
+    else if(map[y][x] < 0){
+        part_map[y][x] = ((-1*(map[y][x])) % 10) + ASC_NUM;
+        return part_map[y][x];
+    }
+    else if(map[y][x] >= LBL_OFFSET){
+        revealBlob(map, part_map, map[y][x]); // zero region
+    }
+    return BLOB; // blob revealed
 }
 
 void initMap(int8_t ** map, struct drand48_data * randBuffer){

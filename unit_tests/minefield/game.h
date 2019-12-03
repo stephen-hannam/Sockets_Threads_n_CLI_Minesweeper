@@ -15,7 +15,7 @@
 
 #define RAND_NUM_SEED 42
 
-void test_displayMap(int8_t ** map);
+void test_displayMap(int8_t ** map_raw, unsigned char ** map_parsed);
 void initMap(int8_t ** map, struct drand48_data * randBuffer);
 void placeMines(int8_t ** map, struct drand48_data * randBuffer);
 void placeAdjs(int8_t ** map);
@@ -23,5 +23,7 @@ void blobRelabel(int8_t ** map, int8_t old, int8_t new);
 void newLabel(int8_t ** map, int8_t * tiles, uint8_t count);
 void addBlobFringes(int8_t ** map);
 void placeBlobs(int8_t ** map);
+void revealBlob(int8_t ** map, unsigned char ** part_map, int8_t id);
+int8_t updateMap(int8_t ** map, unsigned char ** part_map, uint8_t x, uint8_t y, bool place_flag);
 
 #endif
