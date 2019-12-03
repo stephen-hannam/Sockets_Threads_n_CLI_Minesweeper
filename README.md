@@ -6,9 +6,6 @@ Client-Server style CLI Minesweeper Game written in C for Linux. Featuring:
 2. Signal handling
 3. Pthreads in a thread pool configuration and protected critical sections
 4. Highly optimized minefield using connected-component-labelling (blob detection); 1 byte per tile
-
-	-- rather than chasing pointers all over the heap like some sort of linked-list loving, cycle-wasting programmer who makes things easy on themselves.
-
 5. Client authentication (of the pointless and weak variety) and a leader-board
 
 ### Getting Started
@@ -53,4 +50,39 @@ So you see now, there’s this struct thing, and people who don’t prefer to wr
 
 ### Unit tests
 
+#### Minefield
+
+Encode all the necessary data in as few bits as you can, offload as much structural information to some simple arithmetic patterns, and pack it into a contiguous array.
+
+Rather than chasing pointers all over the heap like some sort of linked-list loving, cycle-wasting programmer who makes things easy on themselves.
+
+Granted, setting up the original mine-field is computationally heavier than building a linked-list. However, once built, the encoding follows a simple to decode pattern.
+
+1. Mines are the lowest available signed value (for 8-bits = -128)
+2. Non mine tiles have values 0 - 8 as per usual game rules
+3. 0 tiles are assigned a number 9 - MAX based on which contiguous blob of 0s they belong to
+4. Non-zero tiles adjacent to a blob of zeros go into -ve values
+5. The ones position of -ve valued non-zero (non-mine) tiles retain the tiles original value
+6. The tens position is based on which blob of zeros a -ve value is adjacent to
+
 ![](https://i.imgur.com/i4wDj93.png)
+
+The final process of evaluated moves and revealing blobs on the minefield is simple and avoids visiting the heap.
+
+Expanding zero-blobs is done by:
+
+```
+void revealBlob(int8_t ** map, unsigned char ** part_map, int8_t id){
+    for(uint8_t i = 0; i < NUM_TILES_X; i++){
+        for(uint8_t j = 0; j < NUM_TILES_Y; j++){
+            if(map[j][i] == id) part_map[j][i] = '0';
+            else if(map[j][i] < 0 && map[j][i] != MINE){
+                if((-1*(map[j][i]))/10 == (id - LBL_OFFSET))
+                    part_map[j][i] = ((-1*(map[j][i])) % 10) + ASC_NUM;
+            }
+        }
+    }
+}
+```
+
+And other checks for hitting a mine or not are trivial.
