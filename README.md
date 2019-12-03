@@ -11,8 +11,11 @@ Client-Server style CLI Minesweeper Game written in C for Linux. Featuring:
 ### Getting Started
 
 `$ cd src`
+
 `$ cp ../Makefile .`
+
 `$ make`
+
 `$ ./server`
 
 Open a new terminal, navigate to the same folder
