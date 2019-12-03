@@ -7,7 +7,7 @@ Client-Server style CLI Minesweeper Game written in C for Linux. Featuring:
 3. Pthreads in a thread pool configuration and protected critical sections
 4. Highly optimized minefield using connected-component-labelling (blob detection); 1 byte per tile
 
-	-- rather than chasing pointers all over the heap like some sort of link-list loving, cycle-wasting programmer who makes things easy on themselves.
+	-- rather than chasing pointers all over the heap like some sort of linked-list loving, cycle-wasting programmer who makes things easy on themselves.
 
 5. Client authentication (of the pointless and weak variety) and a leader-board
 
